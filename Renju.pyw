@@ -5,61 +5,46 @@ from pygame.locals import *
 
 class renju(wx.Frame):
     def __init__(self, parent, id):
-        wx.Frame.__init__(self,parent,id, 'RENJU', size = (1306,768))
+        wx.Frame.__init__(self,parent,id, 'КРЕСТИКИ и НОЛИКИ | КГУ 2024', size = (1306,768))
         panel = wx.Panel(self)
-        #the one player button
+        icon = wx.Icon("icon.png", wx.BITMAP_TYPE_PNG)
+        self.SetIcon(icon)
+        self.SetBackgroundColour(wx.Colour(231, 242, 246))
+
+        #Кнопка для игры против компьютера
         pic4 = wx.Image("oneplayer.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic4, pos = (30, 140))
+        self.button = wx.BitmapButton(panel, -1, pic4, pos = (250, 140))
         self.Bind(wx.EVT_BUTTON, self.regist, self.button)
         self.button.SetDefault()
-        #the new game two player button
+        #Кнопка для игры вдвоем
         pic = wx.Image("twoplayer.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic, pos = (335, 140))
+        self.button = wx.BitmapButton(panel, -1, pic, pos = (735, 140))
         self.Bind(wx.EVT_BUTTON, self.dome, self.button)
         self.button.SetDefault()    
-        #the about renju button
-        pic3 = wx.Image("about.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic3, pos = (945, 140))
-        self.Bind(wx.EVT_BUTTON, self.about, self.button)
-        #the themes button
-        pic5 = wx.Image("themes.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic5, pos = (640, 140))
-        self.Bind(wx.EVT_BUTTON, self.theme, self.button)
-        #static text
-        text = wx.StaticText(panel, -1, "RENJU - FIVE IN A LINE", (30, 10))
-        font = wx.Font(80, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        text.SetForegroundColour((0,0,128))
+        #Название проекта
+        text = wx.StaticText(panel, -1, "КРЕСТИКИ И", (80, 0))
+        font = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        text.SetForegroundColour((0,0,0))
         text.SetFont(font)
-        text = wx.StaticText(panel, -1, "RENJU", (10, 500))
-        font = wx.Font(240, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        text.SetForegroundColour((225,225,225))
+        text = wx.StaticText(panel, -1, "НОЛИКИ", (770, 0))
+        font = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        text.SetForegroundColour((191, 82, 88))
         text.SetFont(font)
-        text = wx.StaticText(panel, -1, "FIVE IN A LINE", (32, 510))
-        font = wx.Font(20, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        text.SetForegroundColour((225,225,225))
-        text.SetFont(font)     
-        line = 'Copyright 2014 - Pranshu Gupta, Abhishek Jain, Rhythm Das.'
+        #Об авторе
+        line = '2024 - автор: Королев Максим, студент КГУ'
         text = wx.StaticText(panel, -1, line, (35, 700))
-        font = wx.Font(10, wx.DECORATIVE, wx.NORMAL, wx.NORMAL)
-        text.SetForegroundColour((0,0,128))
+        font = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
+        text.SetForegroundColour((64,62,62))
         text.SetFont(font)
 
-
+    
     def dome(self, event):
-        #Registering the player
-        textbox = wx.TextEntryDialog(None,"First Player gets the black stone", ' New Player')
-        if textbox.ShowModal() == wx.ID_OK:
-            Name1 = textbox.GetValue()
-            textbox = wx.TextEntryDialog(None,"Second Player gets the white stone", ' New Player')
-            if textbox.ShowModal() == wx.ID_OK:
-                Name2 = textbox.GetValue()
-            else:
-                return
-        else:
-            return
+        Name1 = 'Player1'
+        Name2 = 'Player2'
         renju.twoply(self, event, Name1, Name2)
 
-    #the two player game
+
+    #Игра пользователя против пользователя
     def twoply(self, event, Name1, Name2):
         fread = open('theme.txt', 'r')
         default = fread.readline()
@@ -77,7 +62,7 @@ class renju(wx.Frame):
         background = pygame.image.load(bif).convert()
         black = pygame.image.load(bsif).convert_alpha()
         white = pygame.image.load(wsif).convert_alpha()
-        pygame.display.set_caption(str(Name1)+' vs '+str(Name2))
+        pygame.display.set_caption('Крестик vs Нолик')
         blacks = []
         whites = []
         #loading the initial screen
@@ -142,10 +127,10 @@ class renju(wx.Frame):
                         i = 1
                         while i <= count:
                             if i%2 == 0:
-                                screen.blit(white,whites[i/2 -1])
+                                screen.blit(white,whites[int(i/2 -1)])
                                 pygame.display.update()
                             else:
-                                screen.blit(black,blacks[(i-1)/2 ])
+                                screen.blit(black,blacks[int((i-1)/2)])
                                 pygame.display.update()
                             i = i+1
 
@@ -164,62 +149,64 @@ class renju(wx.Frame):
                     a = (turn[I][0],turn[I][1])
                     #searching for horizontal 4
                     n = 1
-                    while n < 5:
+                    while n < 3:
                         if (a[0]+40*n, a[1])in turn:
                             n = n+1
                         else:
                             break
-                    if n == 5:
-                        b = (a[0]+40*5, a[1])
+                    if n == 3:
+                        b = (a[0]+40*3, a[1])
                         flag = 1
                         break
                     n= 1
-                    while n < 5:
+                    while n < 3:
                         if (a[0]+40*n, a[1]+40*n)in turn:
                             n = n+1
                         else:
                             break
-                    if n == 5:
+                    if n == 3:
                         flag = 1
-                        b = (a[0]+40*5, a[1]+40*5)
+                        b = (a[0]+40*3, a[1]+40*3)
                         break
                     n= 1
-                    while n < 5:
+                    while n < 3:
                         if (a[0]+40*n, a[1]-40*n)in turn:
                             n = n+1
                         else:
                             break
-                    if n == 5:
-                        b = (a[0]+40*5, a[1]-40*5)
+                    if n == 3:
+                        b = (a[0]+40*3, a[1]-40*3)
                         flag = 1
                         break
                     n= 1
-                    while n < 5:
+                    while n < 3:
                         if (a[0], a[1]+40*n)in turn:
                             n = n+1
                         else:
                             break
-                    if n == 5:
-                        b = (a[0], a[1]+40*5)
+                    if n == 3:
+                        b = (a[0], a[1]+40*3)
                         flag = 1
                         break
                     I = I+1
-                #declaring the winner
+                #Окончание игры с двумя пользователями
                 if flag == 1:
                     pygame.time.delay(1000)
                     pygame.quit()
                     i_icon = 'icon.png'
                     if turn == blacks:
-                        bif1 = 'win1.jpg'
+                        winner_text = 'Поздравляем, победил нолик!'
                     if turn == whites:
-                        bif1 = 'win2.jpg'
+                        winner_text = 'Поздравляем, победил крестик!'
                     pygame.init()
                     pygame.display.set_icon(icon)
-                    pygame.display.set_caption('! CONGRATULATIONS '+stone+' !')
-                    screen = pygame.display.set_mode((600,300),0,32)
-                    background = pygame.image.load(bif1).convert()
-                    screen.blit(background,(0,0))
-                    pygame.display.update()
+                    pygame.display.set_caption('КН| Игра окончена')
+                    screen = pygame.display.set_mode((600, 300), 0, 32)
+                    
+                    font = pygame.font.Font(None, 36)  # Выберите желаемый шрифт и размер
+                    text = font.render(winner_text, True, (0, 0, 0), (255, 255, 255))  # Текст в зависимости от победителя
+                    text_rect = text.get_rect(center=(300, 150))  # Размещаем текст по центру экрана
+                    
                     while True:
                         for event in pygame.event.get():
                             if event.type == QUIT:
@@ -228,117 +215,29 @@ class renju(wx.Frame):
                                 pos = list(event.pos)
                                 if pos[0] > 400 and pos[0] < 580 and pos[1] > 200 and pos[1] < 240:
                                     pygame.quit()
-                                    renju.twoply(self,event,Name1,Name2)
+                                    renju.twoply(self, event, Name1, Name2)
                                 if pos[0] > 520 and pos[0] < 580 and pos[1] > 270 and pos[1] < 290:
                                     pygame.quit()
                                 if pos[0] > 390 and pos[0] < 500 and pos[1] > 270 and pos[1] < 290:
                                     pygame.quit()
-                                    renju.viewbrd(self,event,blacks,whites)
-                        screen.blit(background,(0,0))                  
-            screen.blit(background,(0,0))
+                                    renju.viewbrd(self, event, blacks, whites)
+                                    
+                        screen.fill((255, 255, 255))  # Белый фон
+                        screen.blit(text, text_rect)  # Отображаем текст
+                        pygame.display.update()
 
-
-    def about(self, event):
-        i_icon = 'icon.png'
-        bif2 = 'text.png'
-        pygame.init()
-        icon = pygame.image.load(i_icon)
-        pygame.display.set_icon(icon)
-        pygame.display.set_caption('ABOUT RENJU')
-        screen = pygame.display.set_mode((600,300),0,32)
-        background = pygame.image.load(bif2).convert()
-        screen.blit(background,(0,0))
-        pygame.display.update()
-        while True:
-            for event in pygame.event.get():
-                if event.type == QUIT:
                     pygame.quit()
-            screen.blit(background,(0,0))
+                screen.blit(background, (0, 0))
 
 
-    def theme(self, event):
-        i_icon = 'icon.png'
-        bif3 = 'theme.jpg'
-        pygame.init()
-        icon = pygame.image.load(i_icon)
-        pygame.display.set_icon(icon)
-        pygame.display.set_caption('THEMES')
-        screen = pygame.display.set_mode((600,300),0,32)
-        background = pygame.image.load(bif3).convert()
-        screen.blit(background,(0,0))
-        pygame.display.update()
-        while True:
-            for event in pygame.event.get():
-                if event.type == QUIT:
-                    pygame.quit()
-                if event.type == MOUSEBUTTONDOWN:
-                    pos = list(event.pos)
-                    if pos[0]>100 and pos[0]<140 and pos[1]>100 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid1.jpg')
-                        fwrite.close()
-                    if pos[0]>140 and pos[0]<180 and pos[1]>80 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid2.jpg')
-                        fwrite.close()
-                    if pos[0]>180 and pos[0]<220 and pos[1]>100 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid3.jpg')
-                        fwrite.close()
-                    if pos[0]>220 and pos[0]<260 and pos[1]>130 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid4.jpg')
-                        fwrite.close()
-                    if pos[0]>260 and pos[0]<300 and pos[1]>80 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid5.jpg')
-                        fwrite.close()
-                    if pos[0]>300 and pos[0]<340 and pos[1]>100 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid6.jpg')
-                        fwrite.close()
-                    if pos[0]>340 and pos[0]<380 and pos[1]>100 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid7.jpg')
-                        fwrite.close()
-                    if pos[0]>380 and pos[0]<420 and pos[1]>60 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid8.jpg')
-                        fwrite.close()
-                    if pos[0]>420 and pos[0]<460 and pos[1]>120 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid9.jpg')
-                        fwrite.close()
-                    if pos[0]>460 and pos[0]<500 and pos[1]>100 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid10.jpg')
-                        fwrite.close()
-                    if pos[0]>500 and pos[0]<540 and pos[1]>60 and pos[1]<260:
-                        pygame.quit()
-                        fwrite = open('theme.txt', 'w')
-                        fwrite.writelines('grid11.jpg')
-                        fwrite.close()
-                        
-            screen.blit(background,(0,0))
 
+    
+
+    
     def regist(self, event):
         #Registering the player
-        textbox = wx.TextEntryDialog(None,"Your Name", ':) New Player')
-        if textbox.ShowModal() == wx.ID_OK:
-            Name = textbox.GetValue()
-        else:
-            return
-        renju.oneply(self, event, Name)
+         Name = "PLAYER"
+         renju.oneply(self, event, Name)
     
     def oneply(self, event, Name):
         fread = open('theme.txt', 'r')
@@ -359,7 +258,7 @@ class renju(wx.Frame):
         background = pygame.image.load(bif).convert()
         black = pygame.image.load(bsif).convert_alpha()
         white = pygame.image.load(wsif).convert_alpha()
-        pygame.display.set_caption('Welcome ' + str(Name))
+        pygame.display.set_caption('КН | Игра против компьютера')
         #loading the initial screen
         count = 1
         blacks.append((300,300))
@@ -503,7 +402,7 @@ class renju(wx.Frame):
                 if count%2 == 0:
                     algo.attack(blacks, whites, 0, 6, -1000, 1000)
                     #algo.attack(blacks,whites)
-                    print count+1
+                    print(count+1)
                     pygame.display.update()
                     i = 0
                     while i < len(whites):
@@ -523,43 +422,43 @@ class renju(wx.Frame):
                         a = (blacks[I][0],blacks[I][1])
                         #searching for horizontal 4
                         n = 1
-                        while n < 5:
+                        while n < 3:
                             if (a[0]+40*n, a[1])in blacks:
                                 n = n+1
                             else:
                                 break
-                        if n == 5:
-                            b = (a[0]+40*5, a[1])
+                        if n == 3:
+                            b = (a[0]+40*3, a[1])
                             temp = 1
                             break
                         n= 1
-                        while n < 5:
+                        while n < 3:
                             if (a[0]+40*n, a[1]+40*n)in blacks:
                                 n = n+1
                             else:
                                 break
-                        if n == 5:
+                        if n == 3:
                             temp = 1
-                            b = (a[0]+40*5, a[1]+40*5)
+                            b = (a[0]+40*3, a[1]+40*3)
                             break
                         n= 1
-                        while n < 5:
+                        while n < 3:
                             if (a[0]+40*n, a[1]-40*n)in blacks:
                                 n = n+1
                             else:
                                 break
-                        if n == 5:
-                            b = (a[0]+40*5, a[1]-40*5)
+                        if n == 3:
+                            b = (a[0]+40*3, a[1]-40*3)
                             temp = 1
                             break
                         n= 1
-                        while n < 5:
+                        while n < 3:
                             if (a[0], a[1]+40*n)in blacks:
                                 n = n+1
                             else:
                                 break
-                        if n == 5:
-                            b = (a[0], a[1]+40*5)
+                        if n == 3:
+                            b = (a[0], a[1]+40*3)
                             temp = 1
                             break
                         I = I+1
@@ -567,15 +466,17 @@ class renju(wx.Frame):
                     if temp == 1:
                         pygame.time.delay(1000)
                         pygame.quit()
-                        i_icon = 'icon.png'
-                        bif5 = 'lost.jpg'
                         pygame.init()
                         pygame.display.set_icon(icon)
-                        pygame.display.set_caption(Name+' LOST')
-                        screen = pygame.display.set_mode((600,300),0,32)
-                        background = pygame.image.load(bif5).convert()
-                        screen.blit(background,(0,0))
-                        pygame.display.update()
+                        pygame.display.set_caption('КН | ПРОИГРЫШ')
+                        screen = pygame.display.set_mode((600, 300), 0, 32)
+                        
+                        font = pygame.font.Font(None, 36)  # Выберите желаемый шрифт и размер
+                        text1 = font.render('Ты проиграл!', True, (0, 0, 0), (255, 255, 255))  # Первая строка текста
+                        text1_rect = text1.get_rect(center=(300, 120))  # Размещаем первую строку по центру экрана, чуть выше центра
+                        text2 = font.render('Попробуй ещё раз', True, (0, 0, 0), (255, 255, 255))  # Вторая строка текста
+                        text2_rect = text2.get_rect(center=(300, 180))  # Размещаем вторую строку ниже первой
+                        
                         while True:
                             for event in pygame.event.get():
                                 if event.type == QUIT:
@@ -584,16 +485,24 @@ class renju(wx.Frame):
                                     pos = list(event.pos)
                                     if pos[0] > 400 and pos[0] < 580 and pos[1] > 200 and pos[1] < 240:
                                         pygame.quit()
-                                        renju.oneply(self,event,Name)
+                                        renju.oneply(self, event, Name)
                                     if pos[0] > 520 and pos[0] < 580 and pos[1] > 270 and pos[1] < 290:
                                         pygame.quit()
                                     if pos[0] > 390 and pos[0] < 500 and pos[1] > 270 and pos[1] < 290:
                                         pygame.quit()
-                                        renju.viewbrd(self,event,blacks,whites)
-                            screen.blit(background,(0,0))
+                                        renju.viewbrd(self, event, blacks, whites)
+                                     
+                            screen.fill((255, 255, 255))  # Белый фон
+                            screen.blit(text1, text1_rect)  # Отображаем первую строку текста
+                            screen.blit(text2, text2_rect)  # Отображаем вторую строку текста
+                            pygame.display.update()
+
                         pygame.quit()
-                    count = count +1         
-            screen.blit(background,(0,0))
+                    count = count + 1
+                    screen.blit(background, (0, 0))
+
+
+
         
     def closebutton(self, event):
         box = wx.MessageDialog(None, "Do you really want to exit?", ':(  EXIT !',wx.YES_NO)
