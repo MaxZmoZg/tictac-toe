@@ -328,24 +328,24 @@ class renju(wx.Frame):
                                 a = (whites[I][0],whites[I][1])
                                 #searching for horizontal 4
                                 n = 1
-                                while n < 5:
+                                while n < 3:
                                     if (a[0]+40*n, a[1])in whites:
                                         n = n+1
                                     else:
                                         break
-                                if n == 5:
-                                    b = (a[0]+40*5, a[1])
+                                if n == 3:
+                                    b = (a[0]+40*3, a[1])
                                     temp = 1
                                     break
                                 n= 1
-                                while n < 5:
+                                while n < 3:
                                     if (a[0]+40*n, a[1]+40*n)in whites:
                                         n = n+1
                                     else:
                                         break
-                                if n == 5:
+                                if n == 3:
                                     temp = 1
-                                    b = (a[0]+40*5, a[1]+40*5)
+                                    b = (a[0]+40*3, a[1]+40*3)
                                     break
                                 n= 1
                                 while n < 5:
@@ -353,18 +353,18 @@ class renju(wx.Frame):
                                         n = n+1
                                     else:
                                         break
-                                if n == 5:
-                                    b = (a[0]+40*5, a[1]-40*5)
+                                if n == 3:
+                                    b = (a[0]+40*3, a[1]-40*3)
                                     temp = 1
                                     break
                                 n= 1
-                                while n < 5:
+                                while n < 3:
                                     if (a[0], a[1]+40*n)in whites:
                                         n = n+1
                                     else:
                                         break
-                                if n == 5:
-                                    b = (a[0], a[1]+40*5)
+                                if n == 3:
+                                    b = (a[0], a[1]+40*3)
                                     temp = 1
                                     break
                                 I = I+1
