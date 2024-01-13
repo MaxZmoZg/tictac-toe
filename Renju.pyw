@@ -263,9 +263,6 @@ class renju(wx.Frame):
          self.button_2p.Disable()
          self.Update()
          renju.oneply(self, event, Name)
-         self.button_1p.Enable()
-         self.button_2p.Enable()
-         self.Update()
     
     def oneply(self, event, Name):
         fread = open('theme.txt', 'r')
@@ -516,26 +513,41 @@ class renju(wx.Frame):
                         while True:
                             for event in pygame.event.get():
                                 if event.type == QUIT:
+                                    self.button_1p.Enable()
+                                    self.button_2p.Enable()
+                                    self.Update()
                                     pygame.quit()
                                 if event.type == MOUSEBUTTONDOWN:
                                     pos = list(event.pos)
                                     if pos[0] > 400 and pos[0] < 580 and pos[1] > 200 and pos[1] < 240:
+                                        self.button_1p.Enable()
+                                        self.button_2p.Enable()
+                                        self.Update()
                                         pygame.quit()
                                         renju.oneply(self, event, Name)
                                     if pos[0] > 520 and pos[0] < 580 and pos[1] > 270 and pos[1] < 290:
+                                        self.button_1p.Enable()
+                                        self.button_2p.Enable()
+                                        self.Update()
                                         pygame.quit()
                                     if pos[0] > 390 and pos[0] < 500 and pos[1] > 270 and pos[1] < 290:
+                                        self.button_1p.Enable()
+                                        self.button_2p.Enable()
+                                        self.Update()
                                         pygame.quit()
                                         renju.viewbrd(self, event, blacks, whites)
                                      
                             screen.fill((255, 255, 255))  # Белый фон
                             screen.blit(text1, text1_rect)  # Отображаем первую строку текста
                             screen.blit(text2, text2_rect)  # Отображаем вторую строку текста
-                            self.button_1p.Enable()
-                            self.button_2p.Enable()
                             pygame.display.update()
                     count = count + 1
-                    screen.blit(background, (0, 0))
+                    try:
+                        screen.blit(background, (0, 0))
+                    except:
+                        self.button_1p.Enable()
+                        self.button_2p.Enable()
+                        self.Update()
 
 
 
