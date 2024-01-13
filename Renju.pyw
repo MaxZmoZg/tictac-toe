@@ -205,8 +205,6 @@ class renju(wx.Frame):
                         winner_text = 'Поздравляем, победил нолик!'
                     if turn == whites:
                         winner_text = 'Поздравляем, победил крестик!'
-                    self.button_1p.Enable()
-                    self.button_2p.Enable()
                     pygame.init()
                     pygame.display.set_icon(icon)
                     pygame.display.set_caption('КН| Игра окончена')
@@ -220,15 +218,27 @@ class renju(wx.Frame):
                         for event in pygame.event.get():
                             if event.type == QUIT:
                                 pygame.quit()
+                                self.button_1p.Enable()
+                                self.button_2p.Enable()
+                                self.Update()
                             if event.type == MOUSEBUTTONDOWN:
                                 pos = list(event.pos)
                                 if pos[0] > 400 and pos[0] < 580 and pos[1] > 200 and pos[1] < 240:
                                     pygame.quit()
+                                    self.button_1p.Enable()
+                                    self.button_2p.Enable()
+                                    self.Update()
                                     renju.twoply(self, event, Name1, Name2)
                                 if pos[0] > 520 and pos[0] < 580 and pos[1] > 270 and pos[1] < 290:
                                     pygame.quit()
+                                    self.button_1p.Enable()
+                                    self.button_2p.Enable()
+                                    self.Update()
                                 if pos[0] > 390 and pos[0] < 500 and pos[1] > 270 and pos[1] < 290:
                                     pygame.quit()
+                                    self.button_1p.Enable()
+                                    self.button_2p.Enable()
+                                    self.Update()
                                     renju.viewbrd(self, event, blacks, whites)
                                     
                         screen.fill((255, 255, 255))  # Белый фон
