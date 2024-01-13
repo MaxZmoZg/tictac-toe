@@ -393,7 +393,6 @@ class renju(wx.Frame):
                                 I = I+1
                             #declaring the winner
                             if temp == 1:
-                                renju.highscore(self,event)
                                 pygame.quit()
                                 i_icon = 'icon.png'
                                 bif4 = 'win.jpg'
@@ -531,9 +530,6 @@ class renju(wx.Frame):
         box.Destroy
         if ans == 5103:
             self.Close(True)
-
-    def highscore(self):
-        return
 
     def viewbrd(self, event, blacks, whites):
         fread = open('theme.txt', 'r')
