@@ -234,8 +234,6 @@ class renju(wx.Frame):
                         screen.fill((255, 255, 255))  # Белый фон
                         screen.blit(text, text_rect)  # Отображаем текст
                         pygame.display.update()
-
-                    pygame.quit()
                 try:
                     screen.blit(background, (0, 0))
                 except:
@@ -348,11 +346,10 @@ class renju(wx.Frame):
                                 i = i+1
 
                             temp = 0
-                            #checking after each step if any of the player has done five in a line
                             I = 0
                             while I < len(whites):
                                 a = (whites[I][0],whites[I][1])
-                                #searching for horizontal 4
+                                #searching for horizontal 3
                                 n = 1
                                 while n < 3:
                                     if (a[0]+40*n, a[1])in whites:
@@ -522,22 +519,20 @@ class renju(wx.Frame):
                             self.button_1p.Enable()
                             self.button_2p.Enable()
                             pygame.display.update()
-
-                        pygame.quit()
                     count = count + 1
                     screen.blit(background, (0, 0))
 
 
 
         
-    def closebutton(self, event):
+    def closebutton(self):
         box = wx.MessageDialog(None, "Do you really want to exit?", ':(  EXIT !',wx.YES_NO)
         ans = box.ShowModal()
         box.Destroy
         if ans == 5103:
             self.Close(True)
 
-    def highscore(self,event):
+    def highscore(self):
         return
 
     def viewbrd(self, event, blacks, whites):
