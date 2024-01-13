@@ -417,7 +417,13 @@ class renju(wx.Frame):
                                             if pos[0] > 390 and pos[0] < 500 and pos[1] > 270 and pos[1] < 290:
                                                 pygame.quit()
                                                 renju.viewbrd(self,event,blacks,whites)
-                                    screen.blit(background,(0,0))
+                                    try:
+                                        screen.blit(background,(0,0))
+                                    except:
+                                        self.button_1p.Enable()
+                                        self.button_2p.Enable()
+                                        self.Update()
+                                    
                             count = count+1
                         
                 if count%2 == 0:
