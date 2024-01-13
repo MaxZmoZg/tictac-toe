@@ -1,5 +1,6 @@
 import wx
 import algo
+import time
 import pygame, sys
 from pygame.locals import *
 
@@ -13,14 +14,14 @@ class renju(wx.Frame):
 
         #Кнопка для игры против компьютера
         pic4 = wx.Image("oneplayer.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic4, pos = (250, 140))
-        self.Bind(wx.EVT_BUTTON, self.regist, self.button)
-        self.button.SetDefault()
+        self.button_1p = wx.BitmapButton(panel, -1, pic4, pos = (250, 140))
+        self.Bind(wx.EVT_BUTTON, self.start_1p, self.button_1p)
+        self.button_1p.SetDefault()
         #Кнопка для игры вдвоем
         pic = wx.Image("twoplayer.bmp", wx.BITMAP_TYPE_BMP).ConvertToBitmap()
-        self.button = wx.BitmapButton(panel, -1, pic, pos = (735, 140))
-        self.Bind(wx.EVT_BUTTON, self.dome, self.button)
-        self.button.SetDefault()    
+        self.button_2p = wx.BitmapButton(panel, -1, pic, pos = (735, 140))
+        self.Bind(wx.EVT_BUTTON, self.start_2p, self.button_2p)
+        self.button_2p.SetDefault()    
         #Название проекта
         text = wx.StaticText(panel, -1, "КРЕСТИКИ И", (80, 0))
         font = wx.Font(80, wx.DEFAULT, wx.NORMAL, wx.NORMAL)
@@ -38,10 +39,17 @@ class renju(wx.Frame):
         text.SetFont(font)
 
     
-    def dome(self, event):
+    def start_2p(self, event):
         Name1 = 'Player1'
         Name2 = 'Player2'
+        self.button_1p.Disable()
+        self.button_2p.Disable()
+        self.Update()
         renju.twoply(self, event, Name1, Name2)
+        self.button_1p.Enable()
+        self.button_2p.Enable()
+        self.button_1p.Update()
+        self.button_2p.Update()
 
 
     #Игра пользователя против пользователя
@@ -191,13 +199,14 @@ class renju(wx.Frame):
                     I = I+1
                 #Окончание игры с двумя пользователями
                 if flag == 1:
-                    pygame.time.delay(1000)
                     pygame.quit()
                     i_icon = 'icon.png'
                     if turn == blacks:
                         winner_text = 'Поздравляем, победил нолик!'
                     if turn == whites:
                         winner_text = 'Поздравляем, победил крестик!'
+                    self.button_1p.Enable()
+                    self.button_2p.Enable()
                     pygame.init()
                     pygame.display.set_icon(icon)
                     pygame.display.set_caption('КН| Игра окончена')
@@ -225,19 +234,28 @@ class renju(wx.Frame):
                         screen.fill((255, 255, 255))  # Белый фон
                         screen.blit(text, text_rect)  # Отображаем текст
                         pygame.display.update()
-
-                    pygame.quit()
-                screen.blit(background, (0, 0))
+                try:
+                    screen.blit(background, (0, 0))
+                except:
+                    self.button_1p.Enable()
+                    self.button_2p.Enable()
+                    self.Update()
 
 
 
     
 
     
-    def regist(self, event):
+    def start_1p(self, event):
         #Registering the player
          Name = "PLAYER"
+         self.button_1p.Disable()
+         self.button_2p.Disable()
+         self.Update()
          renju.oneply(self, event, Name)
+         self.button_1p.Enable()
+         self.button_2p.Enable()
+         self.Update()
     
     def oneply(self, event, Name):
         fread = open('theme.txt', 'r')
@@ -268,7 +286,13 @@ class renju(wx.Frame):
         #the game loop
         while True:
             pos = [0,0]
-            for event in pygame.event.get():
+            try:
+                events = pygame.event.get()
+            except:
+                self.button_1p.Enable()
+                self.button_2p.Enable()
+                self.Update()
+            for event in events:
                 #to quit when the user clicks the close button
                 if event.type == QUIT:
                     pygame.quit()
@@ -322,11 +346,10 @@ class renju(wx.Frame):
                                 i = i+1
 
                             temp = 0
-                            #checking after each step if any of the player has done five in a line
                             I = 0
                             while I < len(whites):
                                 a = (whites[I][0],whites[I][1])
-                                #searching for horizontal 4
+                                #searching for horizontal 3
                                 n = 1
                                 while n < 3:
                                     if (a[0]+40*n, a[1])in whites:
@@ -371,7 +394,6 @@ class renju(wx.Frame):
                             #declaring the winner
                             if temp == 1:
                                 renju.highscore(self,event)
-                                pygame.time.delay(1000)
                                 pygame.quit()
                                 i_icon = 'icon.png'
                                 bif4 = 'win.jpg'
@@ -464,7 +486,6 @@ class renju(wx.Frame):
                         I = I+1
                     #declaring the winner
                     if temp == 1:
-                        pygame.time.delay(1000)
                         pygame.quit()
                         pygame.init()
                         pygame.display.set_icon(icon)
@@ -495,23 +516,23 @@ class renju(wx.Frame):
                             screen.fill((255, 255, 255))  # Белый фон
                             screen.blit(text1, text1_rect)  # Отображаем первую строку текста
                             screen.blit(text2, text2_rect)  # Отображаем вторую строку текста
+                            self.button_1p.Enable()
+                            self.button_2p.Enable()
                             pygame.display.update()
-
-                        pygame.quit()
                     count = count + 1
                     screen.blit(background, (0, 0))
 
 
 
         
-    def closebutton(self, event):
+    def closebutton(self):
         box = wx.MessageDialog(None, "Do you really want to exit?", ':(  EXIT !',wx.YES_NO)
         ans = box.ShowModal()
         box.Destroy
         if ans == 5103:
             self.Close(True)
 
-    def highscore(self,event):
+    def highscore(self):
         return
 
     def viewbrd(self, event, blacks, whites):
